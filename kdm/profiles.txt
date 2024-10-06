@@ -1,0 +1,2 @@
+-c:v mpeg1video -g 18 -b:v 1150k -maxrate:v 1150k -minrate:v 1150k -bufsize:v 327680
+-c:v mpeg1video -g 15 -b:v 2040k -maxrate:v 4800k -minrate:v 1150k -bufsize:v 576860

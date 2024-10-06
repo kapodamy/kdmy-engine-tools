@@ -1,0 +1,63 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}\\output",
+            "environment": [],
+            "externalConsole": false,
+            "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "gdb",
+                "program": "${workspaceFolder}/output/sfx"
+            },
+            "osx": {
+                "MIMode": "lldb",
+                "miDebuggerPath": "lldb-mi",
+                "program": "${workspaceFolder}/output/sfx"
+            },
+            "windows": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "gdb.exe",
+                "program": "${workspaceFolder}/output/sfx.exe",
+                "args": [
+                    // --max-duration    [ms]       Maximum sound duration, use 0 to guess automatically. Default: 0
+                    // --sample-rate     [hz]       Sample rate frequency, use 0 to keep the original sample rate. Default: original sample rate or 16000 if '--auto-samplerate' is present
+                    // --auto-sample-rate           Reduce sample rate until all encoding criterias are met, but not below '--sample-rate' value.
+                    // --pcm-u8                     Use 'unsigned 8-bit PCM', better audio quality but increases x2 the result file size.
+                    // --force-mono                 Downmix to mono, by default always is downmixed to stereo.
+                    // --copy-if-rejected           Copies the file in the output folder as-is if the sound is not eligible.
+                    // --test-only                  Display the output metadata (channels, samples, format and duration) without writing any file.
+
+/*OK*/              //"./sfx_mono_loop.ogg", "./test_loop1.wav"
+/*OK*/              //"./sfx_adpcm_mono_loop.wav", "./test_loop2.wav"
+/*OK*/              //"./sound/scrollMenu.ogg", "./result/scrollMenu.wav"
+/*OK*/              //"--force-mono", "./sound/scrollMenu.ogg", "./result/scrollMenu.wav"
+/*OK*/              //"--force-mono", "--pcm-u8", "./sound/scrollMenu.ogg", "./result/scrollMenu.wav"
+/*OK*/              //"--pcm-u8", "./sound/scrollMenu.ogg", "./result/scrollMenu.wav"
+/*OK*/              //"./sound/gameOverEnd.ogg", "./result/gameOverEnd.wav"
+/*OK*/              //"--copy-if-rejected", "./sound/gameOverEnd.ogg", "./result/gameOverEnd.wav"
+/*OK*/              //"--test-only", "./sound/gameOverEnd.ogg", "./result/gameOverEnd.wav"
+/*OK*/              //"--test-only", "./sound/scrollMenu.ogg", "./result/scrollMenu.wav"
+
+/*OK*/              //"--auto-sample-rate", "./sound/gameOverEnd.ogg", "./result/gameOverEnd.wav"
+/*OK*/              //"--sample-rate", "4000", "--auto-sample-rate", "./sound/gameOverEnd.ogg", "./result/gameOverEnd.wav"
+/*OK*/              //"--sample-rate", "2000", "--auto-sample-rate", "./sound2/train_passes.ogg", "./result/train_passes.wav"
+
+
+/*OK*/              //"--max-duration", "1000", "--copy-if-rejected", "./sound/scrollMenu.ogg", "./result/scrollMenu.wav"
+/*OK*/              //"--max-duration", "1000", "--copy-if-rejected", "./sound/gameOverEnd.ogg", "./result/gameOverEnd.wav"
+/*OK*/              //"--max-duration", "1000", "--test-only", "./sound2/train_passes.ogg", "./result/train_passes.wav"
+
+/*OK*/              //"--sample-rate", "8000", "--auto-sample-rate", "--copy-if-rejected", "./volume_beep.ogg", "./volume_beep.wav"
+                ]
+            },
+            "preLaunchTask": "build windows (debug)",
+            "program": ""
+        }
+    ]
+}

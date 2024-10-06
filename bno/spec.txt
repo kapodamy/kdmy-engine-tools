@@ -1,0 +1,70 @@
+<xml>
+    <body>
+        <article>a</article>
+        <article>b</article>
+        <input name="123"></input>
+        <input tyle="text"></input>
+        <table>
+            <tr count="1">
+                <td color="whitesmoke">abc</td>
+            </tr>
+            <tr>
+                <td>xyz</td>
+            </tr>
+        </table>
+    </body>
+</xml>
+
+
+{
+    "abc": 123,
+    "array": [123, "abc", {"x":false}],
+    "obj: {
+        "a": 1,
+        "b": "str",
+        "c": false
+        "d": null
+    }
+}
+
+//
+// Note:
+//      All strings must be null-terminated, the string
+//      length should count the null terminator character.
+//      The encoding must be UTF-8
+//
+
+{'BNO ' 'JSON'
+    [TYPE=OBJECT        VALUE_LENGTH=n] {
+        [NAME_LENGTH=n] [NAME][0x00] [TYPE=NULL          NAME_LENGTH=n  VALUE_LENGTH=0]
+        [NAME_LENGTH=n] [NAME][0x00] [TYPE=NUMBER_DOUBLE NAME_LENGTH=n  VALUE_LENGTH=8] [DATA double]
+        [NAME_LENGTH=n] [NAME][0x00] [TYPE=NUMBER_LONG   NAME_LENGTH=n  VALUE_LENGTH=8] [DATA int64]
+        [NAME_LENGTH=n] [NAME][0x00] [TYPE=STRING        NAME_LENGTH=n  VALUE_LENGTH=n] [DATA string][0x00]
+        [NAME_LENGTH=n] [NAME][0x00] [TYPE=ARRAY         NAME_LENGTH=n  VALUE_LENGTH=n] [DATA]
+        [NAME_LENGTH=n] [NAME][0x00] [TYPE=OBJECT        NAME_LENGTH=n  VALUE_LENGTH=n] [DATA]
+    } [DATA]
+}
+
+{'BNO ' 'JSON'
+    [TYPE=ARRAY        VALUE_LENGTH=n] {
+        [TYPE=NULL          VALUE_LENGTH=0]
+        [TYPE=NUMBER_DOUBLE VALUE_LENGTH=8] [DATA double]
+        [TYPE=NUMBER_LONG   VALUE_LENGTH=8] [DATA int64]
+        [TYPE=STRING        VALUE_LENGTH=n] [DATA string][0x00]
+        [TYPE=ARRAY         VALUE_LENGTH=n] [DATA]
+        [TYPE=OBJECT        VALUE_LENGTH=n] [DATA]
+    } [DATA]
+}
+
+// total node node length is: sizeof(NODE) + ATTRS_LENGTH + DATA_LENGTH
+
+{'BNO ' 'XML '
+    [TYPE=NODE   NAME_LENGTH=n   ATTRS_COUNT=n   ATTRS_LENGTH=n   DATA_LENGTH=n] [NAME][0x00]  {
+            [ATTR NAME_LENGTH=n VALUE_LENGTH=n] [NAME][0x00] [VALUE][0x00]
+            [ATTR NAME_LENGTH=n VALUE_LENGTH=n] [NAME][0x00] [VALUE][0x00]
+            [ATTR NAME_LENGTH=n VALUE_LENGTH=n] [NAME][0x00] [VALUE][0x00]
+            ...
+        } [DATA]
+    [TYPE=TEXT  TEXT_LENGTH=n] [TEXT][0x00]
+    [TYPE=EOF]
+}

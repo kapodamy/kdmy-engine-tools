@@ -1,0 +1,19 @@
+Pease porridge hot, pease porridge cold,
+Pease porridge in the pot, nine days old;
+Some like it hot, some like it cold,
+Some like it in the pot, nine days old.
+
+[T]Pease porridg[T]hot, p[T]cold,
+[T]in th[T]n[T]days [T];
+
+
+###### ##&&& &&&&&
+offrlv sizep litrl
+
+offrlv=0-63 (offset relative)
+sizep=0-31 (size pattern) (if zero, means no pattern)
+litrl=0-31 (follow literal size) (if zero, means no literal)
+
+if (sizep == 0) <repeats "offrlv" times a single literal byte> <next bytes=1, the literal to write>
+
+

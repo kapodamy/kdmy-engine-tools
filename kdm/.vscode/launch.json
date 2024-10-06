@@ -1,0 +1,81 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}\\output",
+            "environment": [],
+            "externalConsole": false,
+            "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "gdb",
+                "program": "${workspaceFolder}/output/kdm_enc"
+            },
+            "osx": {
+                "MIMode": "lldb",
+                "miDebuggerPath": "lldb-mi",
+                "program": "${workspaceFolder}/output/kdm_enc"
+            },
+            "windows": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "gdb.exe",
+                "program": "${workspaceFolder}/output/kdm_enc.exe",
+                "args": [
+                    "-f", "24",
+                    "-l",
+                    "-g", "20",
+                    "-m",
+                    "-r", "16000",
+                    "./input.mp4",
+                    "./output.kdm"
+                ]
+            },
+            "preLaunchTask": "build windows (debug)",
+            "program": ""
+        },
+        {
+            "name": "Debug decoder",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}\\output",
+            "environment": [],
+            "externalConsole": false,
+            "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "gdb",
+                "program": "${workspaceFolder}/output/kdm_dec"
+            },
+            "osx": {
+                "MIMode": "lldb",
+                "miDebuggerPath": "lldb-mi",
+                "program": "${workspaceFolder}/output/kdm_dec"
+            },
+            "windows": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "gdb.exe",
+                "program": "${workspaceFolder}/output/kdm_dec.exe",
+                "args": [
+/*
+                    "${workspaceFolder}/Well, when Life Gives You Lemons! Funny Cereal Vine.kdm",
+                    "${workspaceFolder}/output/decoded_lifecereal.mkv"
+*/
+/*
+                    "${workspaceFolder}/output/EmpireCity60.kdm",
+                    "${workspaceFolder}/output/decoded_EmpireCity60.mkv"
+                    */
+
+                    "${workspaceFolder}/output/output.kdm",
+                    "${workspaceFolder}/output/decoded_output.mkv"
+                ]
+            },
+            "preLaunchTask": "build decoder windows (debug)",
+            "program": ""
+        }
+    ]
+}

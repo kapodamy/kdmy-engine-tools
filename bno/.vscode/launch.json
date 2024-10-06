@@ -1,0 +1,43 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug (x64)",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}\\output",
+            "environment": [],
+            "externalConsole": false,
+            "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "gdb",
+                "program": "${workspaceFolder}/output/bno"
+            },
+            "osx": {
+                "MIMode": "lldb",
+                "miDebuggerPath": "lldb-mi",
+                "program": "${workspaceFolder}/output/bno"
+            },
+            "windows": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "gdb.exe",
+                "program": "${workspaceFolder}/output/bno.exe",
+                "args": [
+                    //"-w", "String:Lua:VertexSource:FragmentSource:Title","./layout.xml","./layout.bno"
+                    //"./layout.bno","./layout_decoded.xml",
+                    
+                    //"./anims(utf8 _BOOM).xml","./anims(utf8 _BOOM).bno"
+                    //"--whitelist", "String:Lua:VertexSource:FragmentSource:Title", "./week-round.xml"
+
+                    //"gameplay.json", "gameplay.bno"
+                    //"gameplay.bno", "gameplay_decoded.json"
+                    "SPOOKY_KIDS.json", "SPOOKY_KIDS.jbno"
+                ]
+            },
+            "preLaunchTask": "build x64 windows (debug)",
+            "program": ""
+        }
+    ]
+}

@@ -1,0 +1,192 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}\\output",
+            "environment": [],
+            "externalConsole": false,
+            "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "gdb",
+                "program": "${workspaceFolder}/output/kdt_enc"
+            },
+            "osx": {
+                "MIMode": "lldb",
+                "miDebuggerPath": "lldb-mi",
+                "program": "${workspaceFolder}/output/kdt_enc"
+            },
+            "windows": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
+                "program": "${workspaceFolder}/output/kdt_enc.exe",
+                "args": [
+                    //"-g",
+                    //"-t",
+                    //"${workspaceFolder}/output/sample.jpg",
+                    //"${workspaceFolder}/output/sample.kdt"
+
+                    //"-t",
+                    //"${workspaceFolder}/output/9C0.jpg",
+                    
+                    //"${workspaceFolder}/output/9C0.jpg",
+                    //"${workspaceFolder}/output/9C0_tiddled.kdt"
+                    
+                    //"${workspaceFolder}/output/11.jpg",
+
+                    //"${workspaceFolder}/output/sample_opaque.jpg"
+                    
+                    //"${workspaceFolder}/output/sample_opacity.png"
+                    
+                    //"${workspaceFolder}/output/sample_half_opacity.png"
+
+                    //"-g",
+                    //"-t",
+                    //"${workspaceFolder}/output/sample_opaque.jpg",
+                    //"${workspaceFolder}/output/sample_opaque_no_twiddle_rgb565.kdt"
+                    
+                    //"-g",
+                    //"-v",
+                    //"${workspaceFolder}/output/sample_opaque.jpg",
+                    //"${workspaceFolder}/output/sample_opaque_vq_no_twiddle_rgb565.kdt"
+                    
+                    //"-g",
+                    //"-t",
+                    //"-v",
+                    //"${workspaceFolder}/output/sample_opaque.jpg",
+                    //"${workspaceFolder}/output/sample_opaque_vq+twiddle_rgb565.kdt"
+
+                    //"-f", "2",
+                    //"-l", "16",
+                    //"-t",
+                    //"${workspaceFolder}/output/sample_opaque.jpg",
+                    //"${workspaceFolder}/output/sample_opaque_no_twiddle_f2_l16.kdt"
+
+                    //"-p", "MEDIUM",
+                    //"-t",
+                    //"${workspaceFolder}/output/spritesheet.png",
+                    //"${workspaceFolder}/output/spritesheet_pMEDIUM_no_twiddle.kdt"
+
+                    //"-p", "HARD",
+                    //"-t",
+                    //"-x", "YUV422",
+                    //"${workspaceFolder}/output/spritesheet.png",
+                    //"${workspaceFolder}/output/spritesheet_pHARD_no_twiddle_yuv422.kdt"
+
+                    //"6073d20b71b8a.jpg"
+
+                    //"dds_file.DDS"
+
+                    //"icon_file.ico"
+
+                    //"11.jpg"
+
+                    //"-t", "-x", "RGB565", "cars.png"
+                    //"-x", "RGB565", "--uper-slice", "-t", "--sub-slice", "skin-funkin-cardbordtoast.png", "test.kdt"
+                    //"--uper-slice", "-t", "--sub-slice", "skin-funkin-cardbordtoast.png", "test.kdt"
+                    //"-t", "--sub-slice", "test_subslice.png", "test_subslice.kdt"
+                    //"-t", "--sub-slice", "--uper-slice", "menuDesat.png", "menuDesat.kdt"
+                    //"--quality", "4800000", "--vq", "--lzss", "--uper-slice", "--uper-slice-max-blocks", "2", "--sub-slice", "evilBG.png", "evilBG.kdt",
+                    //"--quality", "4800000", "--vq", "--lzss", "--uper-slice", "--sub-slice", "--scale-factor", "2.666667", "speech_bubble_talking.png", "speech_bubble_talking.kdt"
+
+                    //"--max-dimmen", "1024", "--opacity-slice", "speech_bubble_talking.png", "speech_bubble_talking.kdt"
+                ]
+            },
+            "preLaunchTask": "build windows (debug)",
+            "program": ""
+        },
+        {
+            "name": "Debug decoder",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}\\output",
+            "environment": [],
+            "externalConsole": false,
+            "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "gdb",
+                "program": "${workspaceFolder}/output/kdt_dec"
+            },
+            "osx": {
+                "MIMode": "lldb",
+                "miDebuggerPath": "lldb-mi",
+                "program": "${workspaceFolder}/output/kdt_dec"
+            },
+            "windows": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "gdb.exe",
+                "program": "${workspaceFolder}/output/kdt_dec.exe",
+                "args": [
+                    //"-f",
+                    //"${workspaceFolder}/output/9C0.kdt",
+                    //"${workspaceFolder}/output/decoded/9C0.png"
+
+                    //"${workspaceFolder}/output/sample.kdt",
+                    //"${workspaceFolder}/output/decoded/sample.png"
+                    
+                    //"${workspaceFolder}/output/11.kdt",
+                    //"${workspaceFolder}/output/decoded/11.png",
+                    
+                    //"${workspaceFolder}/output/6073d20b71b8a.kdt",
+                    //"${workspaceFolder}/output/decoded/6073d20b71b8a.png",
+
+                    //"${workspaceFolder}/output/9C0_tiddled.kdt",
+                    //"${workspaceFolder}/output/decoded/9C0_tiddled.png"
+
+                    //"${workspaceFolder}/output/sample_opaque.kdt",
+                    //"${workspaceFolder}/output/decoded/sample_opaque.png"
+
+                    //"${workspaceFolder}/output/sample_opacity.kdt",
+                    //"${workspaceFolder}/output/decoded/sample_opacity.png"
+
+                    //"${workspaceFolder}/output/sample_half_opacity.kdt",
+                    //"${workspaceFolder}/output/decoded/sample_half_opacity.png"
+
+                    //"${workspaceFolder}/output/sample_opaque_no_twiddle_rgb565.kdt",
+                    //"${workspaceFolder}/output/decoded/sample_opaque_no_twiddle_rgb565.png"
+
+                    //"${workspaceFolder}/output/sample_opaque_vq_no_twiddle_rgb565.kdt",
+                    //"${workspaceFolder}/output/decoded/sample_opaque_vq_no_twiddle_rgb565.png"
+
+                    //"${workspaceFolder}/output/sample_opaque_vq+twiddle_rgb565.kdt",
+                    //"${workspaceFolder}/output/decoded/sample_opaque_vq+twiddle_rgb565.png"
+
+                    //"${workspaceFolder}/output/sample_opaque_no_twiddle_f2_l16.kdt",
+                    //"${workspaceFolder}/output/decoded/sample_opaque_no_twiddle_f2_l16.png"
+
+                    //"${workspaceFolder}/output/spritesheet_pMEDIUM_no_twiddle.kdt",
+                    //"${workspaceFolder}/output/decoded/spritesheet_pMEDIUM_no_twiddle.png"
+
+                    //"${workspaceFolder}/output/spritesheet_pHARD_no_twiddle_yuv422.kdt",
+                    //"${workspaceFolder}/output/decoded/spritesheet_pHARD_no_twiddle_yuv422.png"
+
+                    //"-f",
+                    //"${workspaceFolder}/output/spritesheet_pHARD_no_twiddle_yuv422.kdt",
+                    //"${workspaceFolder}/output/decoded/spritesheet_pHARD_no_twiddle_yuv422_f.png"
+
+                    //"-s", "neighbor",
+                    //"${workspaceFolder}/output/spritesheet_pHARD_no_twiddle_yuv422.kdt",
+                    //"${workspaceFolder}/output/decoded/spritesheet_pHARD_no_twiddle_yuv422_s__neighbor.png"
+
+                    //"err__arrow_U.kdt", "err__arrow_U.png"
+                    //"err__fastCarLol.kdt", "err__fastCarLol.png"
+                    //"err__logo_blur.kdt", "err__logo_blur.png"
+                    //"err__selected.kdt", "err__selected.png"
+                    //"test.kdt", "test.kdt_decoded.png"
+                    //"test_subslice.kdt", "test_subslice.kdt_decoded.png"
+                    //"menuDesat.kdt", "menuDesat.kdt_decoded.png",
+
+                    //"speech_bubble_talking.kdt", "decoded/speech_bubble_talking.png"
+                ]
+            },
+            "preLaunchTask": "build decoder windows (debug)",
+            "program": ""
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+    "terminal.integrated.profiles.windows": {
+        "mingw64-shell": {
+          "path": "C:\\msys64\\usr\\bin\\bash.exe",
+          "args": [
+            "--login"
+          ]
+        }
+      },
+    "terminal.integrated.defaultProfile.windows": "mingw64-shell",
+    "makefile.makePath": "C:\\msys64\\mingw64\\bin\\mingw32-make.exe",
+    "terminal.integrated.env.windows": {
+        "CHERE_INVOKING": "1",
+        "MSYSTEM": "MINGW64",
+    },
+    "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
+    "files.associations": {
+      "chrono": "c",
+      "functional": "c",
+      "swscale.h": "c",
+      "kdm_internal.h": "c",
+      "twopass_buffer.h": "c",
+      "ffgraph.h": "c",
+      "variant": "c",
+      "avcodec.h": "c"
+    },
+}

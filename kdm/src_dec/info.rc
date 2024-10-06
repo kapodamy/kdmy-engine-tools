@@ -1,0 +1,22 @@
+1 VERSIONINFO
+FILEVERSION     0,1,0,0
+PRODUCTVERSION  0,1,0,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904b0"
+    BEGIN
+      VALUE "CompanyName", "kapodamy"
+      VALUE "FileDescription", "PoC KDY-e Dreamcast Media decoder"
+      VALUE "FileVersion", "0.1.0"
+      VALUE "InternalName", "kdm_dec"
+      VALUE "OriginalFilename", "kdm_dec.exe"
+      VALUE "ProductName", "KDM decoder"
+      VALUE "ProductVersion", "0.1.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x080A, 1252
+  END
+END

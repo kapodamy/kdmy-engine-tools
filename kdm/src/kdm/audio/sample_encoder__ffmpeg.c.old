@@ -1,0 +1,275 @@
+/***************************************
+****************************************
+
+FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+
+the adpcm encoder provided by ffmpeg produces a wrong number of samples
+for example encoding 1000ms @ 32Khz produces 32765 samples instead of 32000 samples
+
+the reason of this time-drift is unknown and appears to be a FFmpeg bug
+
+****************************************
+****************************************/
+
+#include <assert.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+
+#include "libavcodec/avcodec.h"
+#include "libavformat/avformat.h"
+#include "libavutil/avutil.h"
+#include "libavutil/imgutils.h"
+#include "libavutil/pixfmt.h"
+#include "libswresample/swresample.h"
+#include "libswscale/swscale.h"
+
+#include "../../logger.h"
+#include "../kdm_internal.h"
+
+
+#define ADDITIONAL_PACKET_DURATION 0.010 // 10ms
+#define BUFFER_LENGTH 2048
+
+
+struct _KDM_Audio {
+    int16_t input_buffer[BUFFER_LENGTH];
+    uint8_t output_buffer[BUFFER_LENGTH * 2];
+    size_t input_buffer_used;
+    size_t output_buffer_used;
+    int32_t rate;
+    bool is_stereo;
+    size_t samples_per_packet;
+    AVCodecContext* avcctx;
+    AVFrame* avframe;
+    AVPacket* avpacket;
+};
+
+
+static const AVChannelLayout mono_layout = AV_CHANNEL_LAYOUT_MONO;
+static const AVChannelLayout stereo_layout = AV_CHANNEL_LAYOUT_STEREO;
+
+
+static bool encode_samples(AVCodecContext* avcctx, AVFrame* frame, AVPacket* packet, uint8_t* output, size_t* encoded) {
+    size_t total_encoded = *encoded = 0;
+
+    int ret = avcodec_send_frame(avcctx, frame);
+    if (ret < 0) {
+        flogger(stderr, "Error sending the frame to the encoder\n");
+        return false;
+    }
+
+    while (true) {
+        ret = avcodec_receive_packet(avcctx, packet);
+
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+            break;
+        else if (ret < 0) {
+            logger(stderr, "avcodec_receive_packet() failed: %s\n", av_err2str(ret));
+            return false;
+        }
+
+        size_t bytes_to_write = (packet->size * frame->ch_layout.nb_channels) / 2;
+        memcpy(output, packet->data, bytes_to_write);
+
+        output += bytes_to_write;
+        total_encoded += packet->size;
+
+        av_packet_unref(packet);
+    }
+
+    *encoded = total_encoded;
+    return true;
+}
+
+
+
+KDM_Audio* kdm_audioenc_init(int32_t rate, bool is_stereo, int32_t fps) {
+    if (rate < 1 || rate > 48000) {
+        logger("kdm_audioenc_init() failed, invalid sample rate\n");
+        return NULL;
+    }
+
+    //
+    // Note: if the encoder init fails, the allocates objects wont be freed
+    //
+
+    const AVCodec* codec = avcodec_find_encoder(AV_CODEC_ID_ADPCM_YAMAHA);
+    if (!codec) {
+        logger("kdm_audioenc_init() failed, missing AV_CODEC_ID_ADPCM_YAMAHA encoder\n");
+        return NULL;
+    }
+
+    AVCodecContext* avcctx = avcodec_alloc_context3(codec);
+    if (!avcctx) {
+        logger("kdm_audioenc_init() failed, can not allocate audio codec context\n");
+        return NULL;
+    }
+
+    avcctx->bit_rate = 0;
+    avcctx->sample_fmt = AV_SAMPLE_FMT_S16;
+    avcctx->sample_rate = rate;
+    int ret = av_channel_layout_copy(&avcctx->ch_layout, is_stereo ? &stereo_layout : &mono_layout);
+    if (ret < 0) {
+        logger("kdm_audioenc_init() call to av_channel_layout_copy() failed: %s\n", av_err2str(ret));
+        return NULL;
+    }
+
+    ret = avcodec_open2(avcctx, codec, NULL);
+    if (ret < 0) {
+        avcodec_free_context(&avcctx);
+        logger("kdm_audioenc_init() failed, can not initialize the codec: %s\n", av_err2str(ret));
+        return NULL;
+    }
+
+    AVPacket* packet = av_packet_alloc();
+    if (!packet) {
+        logger("kdm_audioenc_init() failed, can not allocate the packet\n");
+        return NULL;
+    }
+
+    AVFrame* frame = av_frame_alloc();
+    if (!frame) {
+        logger("kdm_audioenc_init() failed, can not allocate audio frame");
+        return NULL;
+    }
+
+    frame->nb_samples = avcctx->frame_size;
+    frame->format = avcctx->sample_fmt;
+    frame->sample_rate = avcctx->sample_rate;
+
+    ret = av_channel_layout_copy(&frame->ch_layout, &avcctx->ch_layout);
+    if (ret < 0) {
+        logger("kdm_audioenc_init() failed, can not set avframe channel layout: %s\n", av_err2str(ret));
+        return NULL;
+    }
+
+    ret = av_frame_get_buffer(frame, 0);
+    if (ret < 0) {
+        logger("kdm_audioenc_init() failed, can not allocate audio data buffer: %s\n", av_err2str(ret));
+        return NULL;
+    }
+
+
+    KDM_Audio* audioenc = malloc(sizeof(KDM_Audio));
+    assert(audioenc);
+
+    audioenc->samples_per_packet = (size_t)ceil(((1.0 / fps) + ADDITIONAL_PACKET_DURATION) * rate);
+    audioenc->input_buffer_used = 0;
+    audioenc->output_buffer_used = 0;
+    audioenc->rate = rate;
+    audioenc->is_stereo = is_stereo;
+    audioenc->avcctx = avcctx;
+    audioenc->avframe = frame;
+    audioenc->avpacket = packet;
+
+    return audioenc;
+}
+
+
+void kdm_audioenc_destroy(KDM_Audio* audioenc) {
+    avcodec_free_context(&audioenc->avcctx);
+    av_frame_free(&audioenc->avframe);
+    av_packet_free(&audioenc->avpacket);
+    free(audioenc);
+}
+
+ssize_t kdm_audioenc_encode_samples(KDM_Audio* audioenc, int16_t* pcm16sle, size_t samples, FILE* mediafile) {
+    if (!pcm16sle && audioenc->input_buffer_used < 1 && audioenc->output_buffer_used < 1) {
+        // nothing to do
+        return -1;
+    }
+
+    int ret = av_frame_make_writable(audioenc->avframe);
+    if (ret < 0) {
+        logger("kdm_videoenc_encode_samples() call to av_frame_make_writable() failed: %s\n", av_err2str(ret));
+        return -2;
+    }
+
+    size_t channels = audioenc->is_stereo ? 2 : 1;
+    size_t bytes_per_sample_per_channel = sizeof(int16_t) * channels;
+    int16_t* avframe_buffer = (int16_t*)audioenc->avframe->data[0];
+    AVFrame* avframe = audioenc->avframe;
+    size_t avframe_available = avframe->nb_samples;
+    size_t samples_per_packet = audioenc->samples_per_packet;
+
+    if (pcm16sle) {
+        size_t read = (BUFFER_LENGTH / channels) - audioenc->input_buffer_used;
+        if (read > samples) read = samples;
+
+        int16_t* input_ptr = audioenc->input_buffer + (audioenc->input_buffer_used * channels);
+        memcpy(input_ptr, pcm16sle, read * bytes_per_sample_per_channel);
+
+        audioenc->input_buffer_used += read;
+
+        if (audioenc->input_buffer_used < avframe_available) {
+            // no enough samples, try later
+            return 0;
+        }
+
+        memcpy(avframe_buffer, audioenc->input_buffer, avframe_available * bytes_per_sample_per_channel);
+        audioenc->input_buffer_used -= avframe_available;
+
+        memmove(
+            audioenc->input_buffer,
+            audioenc->input_buffer + (avframe_available * channels),
+            audioenc->input_buffer_used * bytes_per_sample_per_channel
+        );
+    } else if (audioenc->input_buffer_used > 0) {
+        memcpy(avframe_buffer, audioenc->input_buffer, audioenc->input_buffer_used * bytes_per_sample_per_channel);
+
+        avframe->nb_samples = audioenc->input_buffer_used;
+        audioenc->input_buffer_used = 0;
+    } else {
+        goto L_write_packet;
+    }
+
+    size_t encoded;
+    uint8_t* output_ptr;
+    bool success;
+
+L_prepare_encode:
+    size_t output_buffer_used_bytes = (audioenc->output_buffer_used * channels) / 2;
+    assert(output_buffer_used_bytes < (BUFFER_LENGTH * 2));
+
+    encoded = 0;
+    output_ptr = audioenc->output_buffer + output_buffer_used_bytes;
+    success = encode_samples(audioenc->avcctx, avframe, audioenc->avpacket, output_ptr, &encoded);
+
+    if (!success) {
+        return -2;
+    }
+
+    audioenc->output_buffer_used += encoded;
+
+    if (!pcm16sle && avframe) {
+        // restore "nb_samples" value
+        avframe->nb_samples = audioenc->avcctx->frame_size;
+
+        if (success) {
+            // flush encoder
+            avframe = NULL;
+            goto L_prepare_encode;
+        }
+    }
+
+L_write_packet:
+    if (!pcm16sle || audioenc->output_buffer_used >= samples_per_packet) {
+        if (audioenc->output_buffer_used < samples_per_packet) samples_per_packet = audioenc->output_buffer_used;
+
+        size_t bytes_to_write = (samples_per_packet * channels) / 2;
+        audioenc->output_buffer_used -= samples_per_packet;
+
+        fwrite(audioenc->output_buffer, bytes_to_write, 1, mediafile);
+
+        memmove(
+            audioenc->output_buffer,
+            audioenc->output_buffer + bytes_to_write,
+            (audioenc->output_buffer_used * channels) / 2
+        );
+
+        return bytes_to_write;
+    }
+
+    return 0;
+}
